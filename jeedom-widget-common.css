@@ -1,0 +1,254 @@
+/* ============================================================
+   JEEDOM WIDGET COMMON — Palette, tokens, composants de base
+   Dernière modification : 2026-04-15
+
+   À déposer dans : /data/customjs/jeedom-widget-common.css
+   Référencer via : <link rel="stylesheet" href="/data/customjs/jeedom-widget-common.css">
+
+   Préfixe de classe : jw-  (= jeedom-widget)
+   Variable de scale : --jw-scale  (1.0 par défaut, piloté par JS
+   via ResizeObserver pour rendre les widgets responsive).
+
+   Ne contient aucun style propre à un équipement : uniquement les
+   briques réutilisables (palette, cartes, badges, jauges, animations).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap');
+
+.jw-root {
+  /* palette */
+  --bg0: #0d0f1a;
+  --bg1: #131626;
+  --bg2: #181c2f;
+  --brd: rgba(255, 255, 255, .06);
+  --brdH: rgba(255, 255, 255, .12);
+  --tD:  #4a5280;
+  --tM:  #8892b8;
+  --tH:  #ccd6f6;
+  --tV:  #e8edff;
+  --cOk:    #22c55e;
+  --cW:     #f59e0b;
+  --cC:     #ef4444;
+  --cBlue:  #3b82f6;
+  --cPurple: #8b5cf6;
+  --mono: 'Share Tech Mono', monospace;
+  --sans: 'Exo 2', sans-serif;
+
+  /* scale factor (piloté par JS) */
+  --jw-scale: 1;
+
+  font-family: var(--sans);
+  color: var(--tH);
+  background: var(--bg0);
+  position: relative;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.jw-root *,
+.jw-root *::before,
+.jw-root *::after { box-sizing: border-box; }
+
+/* Fond décoratif : grille + vignette — activé si l'on ajoute .jw-bg-grid */
+.jw-bg-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, .03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, .03) 1px, transparent 1px);
+  background-size: calc(40px * var(--jw-scale)) calc(40px * var(--jw-scale));
+}
+.jw-bg-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, .55) 100%);
+}
+.jw-bg-grid > * { position: relative; z-index: 1; }
+
+/* ===== Typo de base (responsive via --jw-scale) ===== */
+.jw-h1 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: calc(30px * var(--jw-scale));
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--tV);
+  text-shadow: 0 0 calc(20px * var(--jw-scale)) rgba(99, 102, 241, .4);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.jw-badge {
+  font-size: calc(13px * var(--jw-scale));
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--tD);
+  background: var(--bg2);
+  border: 1px solid var(--brd);
+  border-radius: 4px;
+  padding: calc(4px * var(--jw-scale)) calc(10px * var(--jw-scale));
+  display: inline-block;
+}
+
+.jw-time {
+  font-family: var(--mono);
+  font-size: calc(15px * var(--jw-scale));
+  color: var(--tD);
+}
+.jw-time span { color: var(--tM); }
+
+/* ===== Carte standard ===== */
+.jw-card {
+  background: var(--bg1);
+  border: 1px solid var(--brd);
+  border-radius: calc(10px * var(--jw-scale));
+  position: relative;
+  overflow: hidden;
+  padding: calc(18px * var(--jw-scale)) calc(22px * var(--jw-scale));
+}
+.jw-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: calc(4px * var(--jw-scale));
+  background: var(--cOk);
+  opacity: .9;
+  transition: background .4s;
+}
+.jw-card[data-state="ok"]::before       { background: var(--cOk); }
+.jw-card[data-state="warn"]::before     { background: var(--cW); }
+.jw-card[data-state="crit"]::before     { background: var(--cC); }
+.jw-card[data-state="offline"]::before  { background: var(--tD); }
+
+/* Sous-carte (metric tile) */
+.jw-metric {
+  background: var(--bg2);
+  border: 1px solid var(--brd);
+  border-radius: calc(8px * var(--jw-scale));
+  padding: calc(10px * var(--jw-scale)) calc(14px * var(--jw-scale));
+}
+.jw-metric-label {
+  font-size: calc(11px * var(--jw-scale));
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--tD);
+  margin-bottom: calc(4px * var(--jw-scale));
+}
+.jw-metric-value {
+  font-family: var(--mono);
+  font-size: calc(44px * var(--jw-scale));
+  line-height: 1;
+  color: var(--tV);
+  transition: color .4s;
+}
+.jw-metric-value .u {
+  font-size: calc(20px * var(--jw-scale));
+  color: var(--tM);
+  margin-left: calc(3px * var(--jw-scale));
+}
+
+/* ===== Statut pill ===== */
+.jw-pill {
+  font-size: calc(13px * var(--jw-scale));
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: calc(6px * var(--jw-scale)) calc(12px * var(--jw-scale));
+  border-radius: calc(5px * var(--jw-scale));
+  border: 1px solid var(--brdH);
+  background: rgba(34, 197, 94, .1);
+  color: var(--cOk);
+  white-space: nowrap;
+  display: inline-block;
+}
+.jw-pill[data-state="warn"] {
+  background: rgba(245, 158, 11, .12);
+  color: var(--cW);
+  border-color: rgba(245, 158, 11, .4);
+}
+.jw-pill[data-state="crit"] {
+  background: rgba(239, 68, 68, .15);
+  color: var(--cC);
+  border-color: rgba(239, 68, 68, .5);
+}
+.jw-pill[data-state="offline"] {
+  background: rgba(148, 163, 184, .1);
+  color: var(--tM);
+  border-color: var(--brdH);
+}
+
+/* ===== Jauge horizontale ===== */
+.jw-gauge {
+  height: calc(10px * var(--jw-scale));
+  background: rgba(255, 255, 255, .04);
+  border-radius: calc(5px * var(--jw-scale));
+  border: 1px solid var(--brd);
+  overflow: hidden;
+  position: relative;
+}
+.jw-gauge-fill {
+  height: 100%;
+  width: 0;
+  border-radius: calc(4px * var(--jw-scale));
+  transition: width .6s cubic-bezier(.4, 0, .2, 1), background .4s;
+  background: var(--cOk);
+}
+
+/* Couleurs d'état (sur metric-value et gauge) */
+.jw-c-ok   { color: var(--cOk); }
+.jw-c-w    { color: var(--cW); }
+.jw-c-c    { color: var(--cC); }
+.jw-c-blue { color: var(--cBlue); }
+.jw-bg-ok  { background: var(--cOk); }
+.jw-bg-w   { background: var(--cW); }
+.jw-bg-c   { background: var(--cC); }
+
+/* ===== Animations ===== */
+@keyframes jwBlink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .25; }
+}
+.jw-blink { animation: jwBlink .7s ease-in-out infinite; }
+
+@keyframes jwSpin {
+  to { transform: rotate(360deg); }
+}
+.jw-spin { animation: jwSpin .7s linear infinite; }
+
+/* ===== Ligne détail (label/valeur) ===== */
+.jw-drow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: calc(2px * var(--jw-scale)) 0;
+  font-size: calc(13px * var(--jw-scale));
+  gap: calc(8px * var(--jw-scale));
+}
+.jw-dk {
+  color: var(--tD);
+  letter-spacing: .04em;
+  flex-shrink: 0;
+}
+.jw-dv {
+  font-family: var(--mono);
+  color: var(--tH);
+  max-width: 60%;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Séparateur fin */
+.jw-sep {
+  border-top: 1px solid var(--brd);
+  padding-top: calc(10px * var(--jw-scale));
+}
