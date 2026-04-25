@@ -1,6 +1,6 @@
 /* ============================================================
    JEEDOM WIDGET COMMON — Palette, tokens, composants de base
-   Dernière modification : 2026-04-25
+   Dernière modification : 2026-04-25b
 
    À déposer dans : /data/customjs/jeedom-widget-common.css
    Référencer via : <link rel="stylesheet" href="/data/customjs/jeedom-widget-common.css">
@@ -113,9 +113,12 @@
   overflow: hidden;
   padding: calc(18px * var(--jw-scale)) calc(22px * var(--jw-scale));
 }
-/* Barre d'accent haut de carte — opt-in via data-state="ok|warn|crit|offline" */
+/* Barre d'accent haut de carte — opt-in via data-state="ok|warn|crit|offline".
+   Le ::before de base est explicitement neutralisé pour bloquer toute fuite
+   par cache navigateur ou règle override. */
+.jw-card::before { content: none !important; }
 .jw-card[data-state]::before {
-  content: '';
+  content: '' !important;
   position: absolute;
   top: 0; left: 0; right: 0;
   height: calc(4px * var(--jw-scale));
